@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <title>Airtable Schema Exporter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f3f3f3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Airtable Schema Exporter</h1>
+
+<form method="post" action="/">
+    <label>Airtable Personal Access Token</label>
+    <input type="password" name="api_key" autocomplete="off"
+           placeholder="Uses AIRTABLE_ACCESS_TOKEN when left blank">
+
+    <button type="submit">Load Bases</button>
+</form>
+
+{% if bases %}
+<form method="post" action="/export">
+    <input type="hidden" name="credential_id" value="{{ credential_id }}">
+
+    <label>Choose Base</label>
+    <select name="base_id" required>
+        {% for base in bases %}
+            <option value="{{ base.id }}">
+                {{ base.name }} — {{ base.id }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">
+        Export Excel
+    </button>
+
+    <button
+        type="submit"
+        formaction="/export-json">
+        Export JSON
+    </button>
+</form>
+{% endif %}
+
+{% if message %}
+<div class="status">
+    {{ message }}
+</div>
+{% endif %}
+
+</body>
+</html>
